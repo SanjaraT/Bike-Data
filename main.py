@@ -31,4 +31,7 @@ corr_matrix = df.corr()
 plt.figure(figsize=(15,10))
 sns.heatmap(corr_matrix, annot=True, fmt = ".2f", cmap = "coolwarm")
 plt.title("Correlation Matrix")
-plt.show()
+# plt.show()
+
+df.drop(columns=["Dew point temperature","Wind speed","Visibility","Functioning Day"],inplace=True)
+print(df.head())
