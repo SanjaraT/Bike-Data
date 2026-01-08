@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder
 import seaborn as sns
@@ -63,3 +64,28 @@ model.fit(X_train_scaled, y_train)
 y_train_pred = model.predict(X_train_scaled)
 y_val_pred = model.predict(X_val_scaled)
 y_test_pred = model.predict(X_test_scaled)
+
+#evaluation
+print("Train Set")
+print("RMSE :", np.sqrt(mean_squared_error(y_train, y_train_pred)))
+print("MAE :", mean_absolute_error(y_train, y_train_pred))
+print("R2 :", r2_score(y_train, y_train_pred))
+
+print("\nValidation Set")
+print("RMSE :", np.sqrt(mean_squared_error(y_val,y_val_pred)))
+print("MAE :", mean_absolute_error(y_val,y_val_pred))
+print("R2 :", r2_score(y_val,y_val_pred))
+
+print("\nTest Set")
+print("RMSE :", np.sqrt(mean_squared_error(y_test,y_test_pred)))
+print("MAE :", mean_absolute_error(y_test,y_test_pred))
+print("R2 :", r2_score(y_test,y_test_pred))
+
+plt.figure()
+plt.scatter(y_test, y_test_pred)
+plt.plot([y_test.min(), y_test.max()],
+         [y_test.min(), y_test.max()],color = 'red')
+plt.xlabel("Actual Values")
+plt.ylabel("Predicted Values")
+plt.title("Actual vs Predicted (Best Fit Line)")
+plt.show()
