@@ -66,26 +66,58 @@ y_val_pred = model.predict(X_val_scaled)
 y_test_pred = model.predict(X_test_scaled)
 
 #evaluation
-print("Train Set")
-print("RMSE :", np.sqrt(mean_squared_error(y_train, y_train_pred)))
-print("MAE :", mean_absolute_error(y_train, y_train_pred))
-print("R2 :", r2_score(y_train, y_train_pred))
+# print("Train Set")
+# print("RMSE :", np.sqrt(mean_squared_error(y_train, y_train_pred)))
+# print("MAE :", mean_absolute_error(y_train, y_train_pred))
+# print("R2 :", r2_score(y_train, y_train_pred))
 
-print("\nValidation Set")
-print("RMSE :", np.sqrt(mean_squared_error(y_val,y_val_pred)))
-print("MAE :", mean_absolute_error(y_val,y_val_pred))
-print("R2 :", r2_score(y_val,y_val_pred))
+# print("\nValidation Set")
+# print("RMSE :", np.sqrt(mean_squared_error(y_val,y_val_pred)))
+# print("MAE :", mean_absolute_error(y_val,y_val_pred))
+# print("R2 :", r2_score(y_val,y_val_pred))
 
-print("\nTest Set")
-print("RMSE :", np.sqrt(mean_squared_error(y_test,y_test_pred)))
-print("MAE :", mean_absolute_error(y_test,y_test_pred))
-print("R2 :", r2_score(y_test,y_test_pred))
+# print("\nTest Set")
+# print("RMSE :", np.sqrt(mean_squared_error(y_test,y_test_pred)))
+# print("MAE :", mean_absolute_error(y_test,y_test_pred))
+# print("R2 :", r2_score(y_test,y_test_pred))
 
-plt.figure()
-plt.scatter(y_test, y_test_pred)
-plt.plot([y_test.min(), y_test.max()],
-         [y_test.min(), y_test.max()],color = 'red')
-plt.xlabel("Actual Values")
-plt.ylabel("Predicted Values")
-plt.title("Actual vs Predicted (Best Fit Line)")
-plt.show()
+# plt.figure()
+# plt.scatter(y_test, y_test_pred)
+# plt.plot([y_test.min(), y_test.max()],
+#          [y_test.min(), y_test.max()],color = 'red')
+# plt.xlabel("Actual Values")
+# plt.ylabel("Predicted Values")
+# plt.title("Actual vs Predicted (Best Fit Line)")
+# plt.show()
+
+#NEURAL NET LINEAR REGRESSION
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense 
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.metrics import MeanAbsoluteError
+
+nn_model = Sequential([Dense(1,input_shape =(X_train_scaled.shape[1],))])
+
+nn_model.compile(
+    optimizer = Adam(learning_rate = 0.01),
+    loss = 'mse',
+    metrics = [MeanAbsoluteError()]
+)
+
+history = nn_model.fit(
+    X_train_scaled, y_train,
+    validation_data = (X_val_scaled, y_val),
+    epochs = 1000,
+    batch_size = 32,
+    verbose = 1
+)
+
+train_loss, train_mae = nn_model.evaluate(X_train_scaled, y_train, verbose=0)
+val_loss, val_mae     = nn_model.evaluate(X_val_scaled, y_val, verbose=0)
+test_loss, test_mae   = nn_model.evaluate(X_test_scaled, y_test, verbose=0)
+
+print("Neural Net Linear Regression")
+print(f"Train RMSE: {train_loss**0.5}")
+print(f"Val RMSE  : {val_loss**0.5}")
+print(f"Test RMSE : {test_loss**0.5}")
