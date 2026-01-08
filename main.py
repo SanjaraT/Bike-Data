@@ -4,6 +4,8 @@ from sklearn.preprocessing import LabelEncoder
 import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
 df = pd.read_csv("SeoulBikeData.csv", encoding="latin1").drop(["Date","Holiday","Seasons"],axis = 1)
 #print(df.head())
@@ -52,4 +54,12 @@ X_val_scaled = scaler.transform(X_val)
 X_test_scaled = scaler.transform(X_test)
 
 X_train_scaled_df = pd.DataFrame(X_train_scaled, columns= X_train.columns)
-print(X_train_scaled_df)
+# print(X_train_scaled_df)
+
+#Linear Regression Model
+model = LinearRegression()
+model.fit(X_train_scaled, y_train)
+
+y_train_pred = model.predict(X_train_scaled)
+y_val_pred = model.predict(X_val_scaled)
+y_test_pred = model.predict(X_test_scaled)
