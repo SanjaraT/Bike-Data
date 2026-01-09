@@ -93,31 +93,51 @@ y_test_pred = model.predict(X_test_scaled)
 #NEURAL NET LINEAR REGRESSION
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense 
+from tensorflow.keras.layers import Dense,Dropout
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.metrics import MeanAbsoluteError
+from tensorflow.keras.callbacks import EarlyStopping
 
-nn_model = Sequential([Dense(1,input_shape =(X_train_scaled.shape[1],))])
+# nn_model = Sequential([Dense(1,input_shape =(X_train_scaled.shape[1],))])
 
-nn_model.compile(
-    optimizer = Adam(learning_rate = 0.01),
+# nn_model.compile(
+#     optimizer = Adam(learning_rate = 0.01),
+#     loss = 'mse',
+#     metrics = [MeanAbsoluteError()]
+# )
+
+# history = nn_model.fit(
+#     X_train_scaled, y_train,
+#     validation_data = (X_val_scaled, y_val),
+#     epochs = 1000,
+#     batch_size = 32,
+#     verbose = 1
+# )
+
+# train_loss, train_mae = nn_model.evaluate(X_train_scaled, y_train, verbose=0)
+# val_loss, val_mae     = nn_model.evaluate(X_val_scaled, y_val, verbose=0)
+# test_loss, test_mae   = nn_model.evaluate(X_test_scaled, y_test, verbose=0)
+
+# print("Neural Net Linear Regression")
+# print(f"Train RMSE: {train_loss**0.5}")
+# print(f"Val RMSE  : {val_loss**0.5}")
+# print(f"Test RMSE : {test_loss**0.5}")
+
+#DEEP NEURAL NETWORK
+dnn_model = Sequential([
+    Dense(128, activation = 'relu', input_shape = (X_train_scaled.shape[1],)),
+    Dense(64, activation = 'relu'),
+    Dense(32, activation = 'relu'),
+    Dense(1)
+])
+
+dnn_model.compile(
+    optimizer = Adam(learning_rate = 0.001),
     loss = 'mse',
-    metrics = [MeanAbsoluteError()]
+    metrics = ['mae']
 )
-
-history = nn_model.fit(
-    X_train_scaled, y_train,
-    validation_data = (X_val_scaled, y_val),
-    epochs = 1000,
-    batch_size = 32,
-    verbose = 1
+early_stop = EarlyStopping(
+    monitor = 'val_loss',
+    patience = 15,
+    restore_best_weights = True
 )
-
-train_loss, train_mae = nn_model.evaluate(X_train_scaled, y_train, verbose=0)
-val_loss, val_mae     = nn_model.evaluate(X_val_scaled, y_val, verbose=0)
-test_loss, test_mae   = nn_model.evaluate(X_test_scaled, y_test, verbose=0)
-
-print("Neural Net Linear Regression")
-print(f"Train RMSE: {train_loss**0.5}")
-print(f"Val RMSE  : {val_loss**0.5}")
-print(f"Test RMSE : {test_loss**0.5}")
