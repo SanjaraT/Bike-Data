@@ -141,3 +141,29 @@ early_stop = EarlyStopping(
     patience = 15,
     restore_best_weights = True
 )
+history = dnn_model.fit(
+    X_train_scaled, y_train,
+    validation_data = (X_val_scaled, y_val),
+    epochs = 200,
+    batch_size = 32,
+    callbacks = [early_stop],
+    verbose = 1
+)
+
+def rmse(model, x, y):
+    loss, _ = model.evaluate(x,y,verbose = 0)
+    return loss**0.5
+
+print("Deep Neural Network")
+print("Train RMSE: ", rmse(dnn_model,X_train_scaled,y_train))
+print("Val RMSE: ", rmse(dnn_model,X_val_scaled,y_val))
+print("Test RMSE: ", rmse(dnn_model,X_test_scaled,y_test))
+
+y_train_pred = dnn_model.predict(X_train_scaled)
+y_val_pred   = dnn_model.predict(X_val_scaled)
+y_test_pred  = dnn_model.predict(X_test_scaled)
+
+print("R2 Scores")
+print("Train R2:", r2_score(y_train, y_train_pred))
+print("Val R2  :", r2_score(y_val, y_val_pred))
+print("Test R2 :", r2_score(y_test, y_test_pred))
